@@ -3,9 +3,6 @@ const db = require('../../data/db-config');
 const Accounts = require('./accounts-model');
 
 exports.checkAccountPayload = (req, res, next) => {
-  // DO YOUR MAGIC
-  // Note: you can either write "manual" validation logic
-  // or use the Yup library (not currently installed)
   if (typeof req.body.name === "undefined" || typeof req.body.budget === "undefined") {
     res.status(400).json({ message: "name and budget are required"});
     return
