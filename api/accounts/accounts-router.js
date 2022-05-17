@@ -1,23 +1,44 @@
-const router = require('express').Router()
+const router = require('express').Router();
+const Accounts = require('./accounts-model');
+const { checkAccountId, checkAccountNameUnique, checkAccountPayload } = require('./accounts-middleware')
 
-router.get('/', (req, res, next) => {
-  // DO YOUR MAGIC
+router.get('/', async (req, res, next) => {
+  Accounts.getAll()
+  .then(result => {
+    res.json(result)
+  })
+  .catch(result => {
+    res.status(500).json({ message: "Error: get request failed" })
+  })
 })
 
-router.get('/:id', (req, res, next) => {
-  // DO YOUR MAGIC
+router.get('/:id', checkAccountId, (req, res, next) => {
+  res.json(req.accounts)
 })
 
-router.post('/', (req, res, next) => {
-  // DO YOUR MAGIC
+router.post('/', checkAccountPayload, checkAccountNameUnique, (req, res, next) => {
+  Accounts.create(req.body) 
+  .then(result => {
+    result.name = result.name.trim()
+    res.status(201).json(result)
+  })
+  .catch(result => {
+    res.status(500).json({ message: "Error: post request failed" })
+  })
 })
 
 router.put('/:id', (req, res, next) => {
   // DO YOUR MAGIC
 });
 
-router.delete('/:id', (req, res, next) => {
-  // DO YOUR MAGIC
+router.delete('/:id', checkAccountId, (req, res, next) => {
+  Accounts.deleteById(req.params.id)
+  .then(result => {
+    res.json(req.accounts)
+  })
+  .catch(result => {
+    res.status(500).json({ message: "Error: delete request failed" })
+  })
 })
 
 router.use((err, req, res, next) => { // eslint-disable-line
