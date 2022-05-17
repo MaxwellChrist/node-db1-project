@@ -16,7 +16,10 @@ const create = account => {
 }
 
 const updateById = (id, account) => {
-
+  return db('accounts').where('id', id).update(account)
+  .then(result => {
+    return getById(id)
+  })
 }
 
 const deleteById = id => {

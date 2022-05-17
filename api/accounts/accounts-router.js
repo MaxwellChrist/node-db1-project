@@ -27,8 +27,14 @@ router.post('/', checkAccountPayload, checkAccountNameUnique, (req, res, next) =
   })
 })
 
-router.put('/:id', (req, res, next) => {
-  // DO YOUR MAGIC
+router.put('/:id', checkAccountPayload, checkAccountId, (req, res, next) => {
+  Accounts.updateById(req.params.id, req.body)
+  .then(result => {
+    res.json(result)
+  })
+  .catch(result => {
+    res.status(500).json({ message: "Error: put request failed" })
+  })
 });
 
 router.delete('/:id', checkAccountId, (req, res, next) => {
